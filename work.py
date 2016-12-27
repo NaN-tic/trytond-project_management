@@ -155,7 +155,7 @@ class ProjectSummary(UnionMixin, ModelSQL, ModelView):
         return ['project.work']
 
     @classmethod
-    def _get_cost(cls, lines):
+    def _get_cost(cls, lines, name=None):
         pool = Pool()
         res = {}
         for line in lines:
@@ -167,7 +167,7 @@ class ProjectSummary(UnionMixin, ModelSQL, ModelView):
         return res
 
     @classmethod
-    def _get_revenue(cls, lines):
+    def _get_revenue(cls, lines, name=None):
         pool = Pool()
         res = {}
         for line in lines:
