@@ -2,9 +2,7 @@
 <!-- The COPYRIGHT file at the top level of this repository contains the full
      copyright notices and license terms. -->
 <tree string="Project Summary">
-      <field name="name"/>
-      <field name="type"/>
+      <field name="origin"/>
       <field name="cost"/>
       <field name="revenue"/>
-      <!-- <field name="origin"/> -->
 </tree>

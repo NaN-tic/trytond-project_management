@@ -17,8 +17,8 @@
   <record model="ir.action.act_window" id="act_project_summary_id">
       <field name="name">Project Summary</field>
       <field name="res_model">project.work.summary</field>
-      <field name="domain" eval="[('parent', '=', None)]" pyson="1"/>
-      <!-- <field name="domain" eval="[]" pyson="1"/> -->
+      <field name="domain" eval="[('parent', '=', None),
+          ('type', '=', 'project.work')]" pyson="1"/>
   </record>
 
   <record model="ir.action.act_window.view" id="act_project_summary_view1">

@@ -3,8 +3,8 @@
 from decimal import Decimal
 from trytond.pool import Pool, PoolMeta
 from trytond.model import ModelView, ModelSQL, fields
-from trytond.model import Unique, UnionMixin
-from sql import Union
+from trytond.model import UnionMixin
+from sql import Union, Column
 
 __all__ = ['Work', 'ProjectSummary']
 
@@ -38,7 +38,6 @@ class Work:
     @classmethod
     def _get_revenue(cls, works):
         res = super(Work, cls)._get_revenue(works)
-
         pool = Pool()
         for model, related_field, revenue_function, cost_function in \
                 cls._get_related_cost_and_revenue():
@@ -63,27 +62,21 @@ class ProjectSummary(UnionMixin, ModelSQL, ModelView):
     revenue = fields.Function(fields.Numeric('revenue', digits=(16, 4)),
         '_get_revenue')
     type = fields.Selection('get_types', 'Type', required=True, readonly=True)
-    # parent = fields.Function(fields.Many2One('project.work.summary', 'Parent'),
-    #   '_get_parent', searcher='_search_parent')
     parent = fields.Many2One('project.work.summary', 'Parent')
     children = fields.One2Many('project.work.summary', 'parent', 'Children')
 
     company = fields.Many2One('company.company', 'Company')
     name = fields.Char('Name')
+    origin = fields.Function(fields.Reference('Origin', selection='get_types'),
+        '_get_origin')
 
-    # origin = fields.Function(fields.Reference('Origin',
-    #     selection='union_models'), 'get_origin_value')
-    #
-    # @classmethod
-    # def get_origin_value(cls, summaries, name):
-    #     origin = {}
-    #     pool = Pool()
-    #
-    #     for summary in summaries:
-    #         Model = pool.get(summary.type)
-    #         origin[summary.id] = '%s,%s' % (summary.type, summary.id)
-    #     return origin
-    #
+    @classmethod
+    def _get_origin(cls, lines, name):
+        m = {}
+        for line in lines:
+            obj = cls.union_unshard(line.id)
+            m[line.id] = "%s,%s" % (obj.__name__, obj.id)
+        return m
 
     @classmethod
     def get_types(cls):
@@ -94,58 +87,21 @@ class ProjectSummary(UnionMixin, ModelSQL, ModelView):
                 ])
         return [(m.model, m.name) for m in models]
 
-    # TODO: NO FUNCIONA
-    # @classmethod
-    # def _search_parent(cls, name, domain):
-    #     pool = Pool()
-    #     ids = []
-    #     print "domain:", domain
-    #     for model in cls.union_models():
-    #         Model = pool.get(model)
-    #         if model != 'project.work':
-    #             dom = ('project', domain[1], domain[2])
-    #         else:
-    #             dom = domain
-    #
-    #         print "dom:", dom
-    #         current_ids = Model.search(dom)
-    #         ids += [x.id for x in current_ids]
-    #     return [('id', 'in', ids)]
-    #
-
-    # @classmethod
-    # def _get_parent(cls, lines, name)  :
-    #     pool = Pool()
-    #     #TODO: ha de poder fer-se  mes facilment. FUNCIONA
-    #     m = {}
-    #     for line in lines:
-    #         obj = cls.union_unshard(line.id)
-    #         m[obj.id] = line.id
-    #
-    #     res = {}
-    #     for line in lines:
-    #         res[line.id] = None
-    #         obj = cls.union_unshard(line.id)
-    #
-    #         if line.type == 'project.work':
-    #             res[line.id] = m.get(obj.parent and obj.parent.id)
-    #         else:
-    #             res[line.id] = m.get(obj.project and obj.project.id)
-    #     return res
-    #
-
     @classmethod
     def union_column(cls, name, field, table, Model):
 
         if name == 'type':
             return Model.__name__
-        # if name == 'parent':
-        #     if Model.__name__ != 'project.work':
-        #         print Model, Model._fields['project'].name
-        #         field = Model._fields['project']
-        #         col = super(ProjectSummary, cls).union_column(name, field,
-        #             table, Model)
-        #         return cls.union_shard(col, Model.__name__)
+
+        if name == 'parent':
+            if Model.__name__ != 'project.work':
+                # TODO: make parent field configurable instead 'project'
+                union_field = Model._fields.get('project')
+                if union_field:
+                    column = Column(table, union_field.name)
+                    target_model = union_field.model_name
+                    column = cls.union_shard(column, target_model)
+                    return column
         res = super(ProjectSummary, cls).union_column(name, field,
             table, Model)
         return res
@@ -176,17 +132,4 @@ class ProjectSummary(UnionMixin, ModelSQL, ModelView):
             obj = cls.union_unshard(line.id)
             val = func([obj])
             res[line.id], = val.values()
-        return res
-
-    @classmethod
-    def table_query(cls):
-        queries = []
-        for model in cls.union_models():
-            table, columns = cls.union_columns(model)
-            if model != 'project.work':
-                queries.append(table.select(*columns, where=table.parent != None ))
-            else:
-                queries.append(table.select(*columns))
-        res = Union(*queries)
-#        print "res:", res
         return res
