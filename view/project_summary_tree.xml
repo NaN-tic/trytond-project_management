@@ -5,4 +5,7 @@
       <field name="origin"/>
       <field name="cost"/>
       <field name="revenue"/>
+      <field name="progress_cost"/>
+      <field name="progress_revenue"/>
+
 </tree>

@@ -4,53 +4,122 @@ from decimal import Decimal
 from trytond.pool import Pool, PoolMeta
 from trytond.model import ModelView, ModelSQL, fields
 from trytond.model import UnionMixin
-from sql import Union, Column
+from trytond.transaction import Transaction
+from trytond.wizard import Wizard, StateView, StateAction, Button
+from sql import Column
+from trytond.pyson import PYSONEncoder
 
-__all__ = ['Work', 'ProjectSummary']
+
+__all__ = ['Work', 'ProjectSummary', 'ProjectSummaryStart',
+    'ProjectSummaryWizard']
+
+
+class ProjectSummaryStart(ModelView):
+    'Project Summary Start'
+    __name__ = 'project.work.summary.start'
+
+    limit_date = fields.Date('At Date')
+
+    @staticmethod
+    def default_limit_date():
+        Date_ = Pool().get('ir.date')
+        return Date_.today()
+
+
+class ProjectSummaryWizard(Wizard):
+    'Project Summary Wizard'
+    __name__ = 'project.open_summary'
+
+    start = StateView('project.work.summary.start',
+        'project_management.open_project_summary_start_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Open', 'open_summary', 'tryton-ok', True),
+            ])
+    open_summary = StateAction('project_management.act_project_summary_id')
+
+    def do_open_summary(self, action):
+        pool = Pool()
+        ProjectSummary = pool.get('project.work.summary')
+        ProjectWork = pool.get('project.work')
+
+        active_ids = Transaction().context.get('active_ids')
+        projects = ProjectWork.browse(active_ids)
+        res_ids = [ProjectSummary.union_shard(w.id, 'project.work') for
+            w in projects]
+
+        context = {}
+        context['limit_date'] = self.start.limit_date
+        data = {'res_ids': res_ids}
+        action['pyson_domain'] = PYSONEncoder().encode([('id', 'in', res_ids)])
+        action['pyson_context'] = PYSONEncoder().encode(context)
+        return action, data
 
 
 class Work:
     __metaclass__ = PoolMeta
     __name__ = 'project.work'
 
+    progress_cost = fields.Function(fields.Numeric('Cost(P)',
+            digits=(16, 4)), 'get_total')
+    progress_revenue = fields.Function(fields.Numeric('Revenue(P)',
+            digits=(16, 4)), 'get_total')
+
     @staticmethod
-    def _get_related_cost_and_revenue():
-        # [(model, related_field, revenue_function, cost_function), ]
+    def _get_summary_models():
+        # [(model, related_field, function), ]
         return []
+
+    @staticmethod
+    def _get_summary_fields():
+        return ['cost', 'revenue', 'progress_cost', 'progress_revenue']
+
+    @classmethod
+    def get_total(cls, works, names):
+        names = list(set(names + cls._get_summary_fields()))
+        res = super(Work, cls).get_total(works, names)
+        return res
+
+    @classmethod
+    def get_amounts(cls, works, names):
+        pool = Pool()
+        res = {}
+        for name in names:
+            res[name] = {}
+            for work in works:
+                res[name][work.id] = Decimal(0)
+
+        for model, related_field, calc_func in cls._get_summary_models():
+            Model = pool.get(model)
+            objects = Model.search([(related_field, 'in',
+                [x.id for x in works])])
+            if not objects:
+                continue
+            func = getattr(Model, calc_func)
+            values = func(objects, names)
+            for name in names:
+                if name not in values:
+                    continue
+                for k, val in values[name].iteritems():
+                    obj = Model(k)
+                    key = getattr(obj, related_field)
+                    res[name][key.id] = res[name].get(key.id, Decimal(0)) + val
+        return res
+
+    @classmethod
+    def _get_progress_cost(cls, works):
+        return cls.get_amounts(works, ['progress_cost'])['progress_cost']
 
     @classmethod
     def _get_cost(cls, works):
-        res = super(Work, cls)._get_cost(works)
-        pool = Pool()
-        for model, related_field, revenue_function, cost_function in \
-                cls._get_related_cost_and_revenue():
-            Model = pool.get(model)
-            objects = Model.search([(related_field, 'in',
-                [x.id for x in works])])
-            func = getattr(Model, cost_function)
-            costs = func(objects)
-            for w, cost in costs.iteritems():
-                obj = Model(w)
-                key = getattr(obj, related_field)
-                res[key.id] = res.get(key.id, Decimal(0)) + cost
-        return res
+        return cls.get_amounts(works, ['cost'])['cost']
 
     @classmethod
     def _get_revenue(cls, works):
-        res = super(Work, cls)._get_revenue(works)
-        pool = Pool()
-        for model, related_field, revenue_function, cost_function in \
-                cls._get_related_cost_and_revenue():
-            Model = pool.get(model)
-            func = getattr(Model, revenue_function)
-            objects = Model.search([(related_field, 'in',
-                [x.id for x in works])])
-            revenues = func(objects)
-            for w, revenue in revenues.iteritems():
-                obj = Model(w)
-                key = getattr(obj, related_field)
-                res[key.id] = res.get(key.id, Decimal(0)) + revenue
-        return res
+        return cls.get_amounts(works, ['revenue'])['revenue']
+
+    @classmethod
+    def _get_progress_revenue(cls, works):
+        return cls.get_amounts(works, ['progress_revenue'])['progress_revenue']
 
 
 class ProjectSummary(UnionMixin, ModelSQL, ModelView):
@@ -58,9 +127,15 @@ class ProjectSummary(UnionMixin, ModelSQL, ModelView):
 
     __name__ = 'project.work.summary'
 
-    cost = fields.Function(fields.Numeric('cost', digits=(16, 4)), '_get_cost')
-    revenue = fields.Function(fields.Numeric('revenue', digits=(16, 4)),
-        '_get_revenue')
+    cost = fields.Function(fields.Numeric('Cost(T)', digits=(16, 4)),
+            'get_total')
+    revenue = fields.Function(fields.Numeric('Revenue(T)', digits=(16, 4)),
+            'get_total')
+    progress_cost = fields.Function(fields.Numeric('Cost(P)',
+            digits=(16, 4)), 'get_total')
+    progress_revenue = fields.Function(fields.Numeric('Revenue(P)',
+            digits=(16, 4)), 'get_total')
+
     type = fields.Selection('get_types', 'Type', required=True, readonly=True)
     parent = fields.Many2One('project.work.summary', 'Parent')
     children = fields.One2Many('project.work.summary', 'parent', 'Children')
@@ -95,8 +170,9 @@ class ProjectSummary(UnionMixin, ModelSQL, ModelView):
 
         if name == 'parent':
             if Model.__name__ != 'project.work':
-                # TODO: make parent field configurable instead 'project'
-                union_field = Model._fields.get('project')
+                field_name = Model._get_summary_related_field()
+                union_field = Model._fields.get(field_name)
+
                 if union_field:
                     column = Column(table, union_field.name)
                     target_model = union_field.model_name
@@ -111,25 +187,16 @@ class ProjectSummary(UnionMixin, ModelSQL, ModelView):
         return ['project.work']
 
     @classmethod
-    def _get_cost(cls, lines, name=None):
+    def get_total(cls, lines, names):
         pool = Pool()
         res = {}
+        for name in names:
+            res[name] = {}
         for line in lines:
             Model = pool.get(line.type)
-            func = getattr(Model, '_get_cost')
+            func = getattr(Model, 'get_total')
             obj = cls.union_unshard(line.id)
-            val = func([obj])
-            res[line.id], = val.values()
-        return res
-
-    @classmethod
-    def _get_revenue(cls, lines, name=None):
-        pool = Pool()
-        res = {}
-        for line in lines:
-            Model = pool.get(line.type)
-            func = getattr(Model, '_get_revenue')
-            obj = cls.union_unshard(line.id)
-            val = func([obj])
-            res[line.id], = val.values()
+            val = func([obj], names)
+            for name in names:
+                res[name][line.id] = val[name][obj.id]
         return res
