@@ -198,5 +198,5 @@ class ProjectSummary(UnionMixin, ModelSQL, ModelView):
             obj = cls.union_unshard(line.id)
             val = func([obj], names)
             for name in names:
-                res[name][line.id] = val[name][obj.id]
+                res[name][line.id] = val[name].get(obj.id, Decimal(0))
         return res
