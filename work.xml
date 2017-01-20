@@ -16,9 +16,6 @@
   <record model="ir.action.act_window" id="act_project_summary_id">
       <field name="name">Project Summary</field>
       <field name="res_model">project.work.summary</field>
-      <!-- <field name="domain"
-          eval="[('id', 'in', Eval('active_ids')), ('type', '=', 'project')]"
-          pyson="1"/> -->
       <field name="domain"
           eval="[('type', '=', 'project')]"
           pyson="1"/>
