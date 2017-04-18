@@ -64,6 +64,9 @@ class Work:
     progress_revenue = fields.Function(fields.Numeric('Revenue(P)',
             digits=(16, 4)), 'get_total')
 
+    invoiced_cost = fields.Function(fields.Numeric('Cost (F)',
+            digits=(16, 4)), 'get_total')
+
     @staticmethod
     def _get_summary_models():
         # [(model, related_field, function), ]
@@ -71,7 +74,8 @@ class Work:
 
     @staticmethod
     def _get_summary_fields():
-        return ['cost', 'revenue', 'progress_cost', 'progress_revenue']
+        return ['cost', 'revenue', 'progress_cost', 'progress_revenue',
+            'invoiced_cost']
 
     @classmethod
     def get_total(cls, works, names):
@@ -106,6 +110,10 @@ class Work:
         return res
 
     @classmethod
+    def _get_invoiced_cost(cls, works):
+        return cls.get_amounts(works, ['invoiced_cost'])['invoiced_cost']
+
+    @classmethod
     def _get_progress_cost(cls, works):
         return cls.get_amounts(works, ['progress_cost'])['progress_cost']
 
@@ -134,6 +142,11 @@ class ProjectSummary(UnionMixin, ModelSQL, ModelView):
     progress_cost = fields.Function(fields.Numeric('Cost(P)',
             digits=(16, 4)), 'get_total')
     progress_revenue = fields.Function(fields.Numeric('Revenue(P)',
+            digits=(16, 4)), 'get_total')
+
+    invoiced_cost = fields.Function(fields.Numeric('Cost(F)',
+            digits=(16, 4)), 'get_total')
+    invoiced_amount = fields.Function(fields.Numeric('Revenue(F)',
             digits=(16, 4)), 'get_total')
 
     type = fields.Selection('get_types', 'Type', required=True, readonly=True)
