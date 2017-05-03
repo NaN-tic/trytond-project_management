@@ -11,8 +11,5 @@
         <field name="invoiced_amount"/>
         <label name="invoiced_cost"/>
         <field name="invoiced_cost"/>
-
-
-
     </xpath>
   </data>
