@@ -92,6 +92,10 @@ class Work:
             for work in works:
                 res[name][work.id] = Decimal(0)
 
+        Company = pool.get('company.company')
+        company = Transaction().context.get('company')
+        company = Company(company)
+        digits = company.currency.digits
         for model, related_field, calc_func in cls._get_summary_models():
             Model = pool.get(model)
             objects = Model.search([(related_field, 'in',
@@ -106,7 +110,9 @@ class Work:
                 for k, val in values[name].iteritems():
                     obj = Model(k)
                     key = getattr(obj, related_field)
-                    res[name][key.id] = res[name].get(key.id, Decimal(0)) + val
+                    res[name][key.id] = (res[name].get(key.id, Decimal(0)) +
+                      val).quantize(
+                          Decimal(str(10.0 ** digits)))
         return res
 
     @classmethod
