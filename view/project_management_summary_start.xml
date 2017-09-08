@@ -4,8 +4,6 @@
 <form string="Open Project Summary" col="2">
     <image name="tryton-dialog-information" xexpand="0" xfill="0"/>
     <group col="3" id="label_date">
-        <label string="Limit Date" id="limit_date"
-            yalign="0.0" xalign="0.0"/>
         <label name="limit_date"/>
         <field name="limit_date"/>
     </group>
