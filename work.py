@@ -112,7 +112,7 @@ class Work:
                     key = getattr(obj, related_field)
                     res[name][key.id] = (res[name].get(key.id, Decimal(0)) +
                       val).quantize(
-                          Decimal(str(10.0 ** digits)))
+                          Decimal(str(10.0 ** -digits)))
         return res
 
     @classmethod
