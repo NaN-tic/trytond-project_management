@@ -7,8 +7,6 @@
         <field name="progress_cost"/>
         <label name="progress_revenue"/>
         <field name="progress_revenue"/>
-        <label name="invoiced_amount"/>
-        <field name="invoiced_amount"/>
         <label name="invoiced_cost"/>
         <field name="invoiced_cost"/>
     </xpath>
