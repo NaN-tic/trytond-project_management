@@ -1,0 +1,127 @@
+#
+msgid ""
+msgstr "Content-Type: text/plain; charset=utf-8\n"
+
+msgctxt "field:project.work,invoiced_cost:"
+msgid "Cost (F)"
+msgstr ""
+
+msgctxt "field:project.work,progress_cost:"
+msgid "Progress Cost"
+msgstr "Cost del progrés"
+
+msgctxt "field:project.work,progress_revenue:"
+msgid "Revenue(P)"
+msgstr ""
+
+msgctxt "field:project.work.summary,children:"
+msgid "Children"
+msgstr ""
+
+msgctxt "field:project.work.summary,company:"
+msgid "Company"
+msgstr ""
+
+msgctxt "field:project.work.summary,cost:"
+msgid "Cost(T)"
+msgstr ""
+
+msgctxt "field:project.work.summary,create_date:"
+msgid "Create Date"
+msgstr ""
+
+msgctxt "field:project.work.summary,create_uid:"
+msgid "Create User"
+msgstr ""
+
+msgctxt "field:project.work.summary,id:"
+msgid "ID"
+msgstr ""
+
+msgctxt "field:project.work.summary,invoiced_amount:"
+msgid "Revenue(F)"
+msgstr ""
+
+msgctxt "field:project.work.summary,invoiced_cost:"
+msgid "Cost(F)"
+msgstr ""
+
+msgctxt "field:project.work.summary,name:"
+msgid "Name"
+msgstr ""
+
+msgctxt "field:project.work.summary,origin:"
+msgid "Origin"
+msgstr ""
+
+msgctxt "field:project.work.summary,parent:"
+msgid "Parent"
+msgstr ""
+
+msgctxt "field:project.work.summary,progress_cost:"
+msgid "Cost(P)"
+msgstr ""
+
+msgctxt "field:project.work.summary,progress_revenue:"
+msgid "Revenue(P)"
+msgstr ""
+
+msgctxt "field:project.work.summary,rec_name:"
+msgid "Name"
+msgstr ""
+
+msgctxt "field:project.work.summary,revenue:"
+msgid "Revenue(T)"
+msgstr ""
+
+msgctxt "field:project.work.summary,type:"
+msgid "Type"
+msgstr ""
+
+msgctxt "field:project.work.summary,write_date:"
+msgid "Write Date"
+msgstr ""
+
+msgctxt "field:project.work.summary,write_uid:"
+msgid "Write User"
+msgstr ""
+
+msgctxt "field:project.work.summary.start,id:"
+msgid "ID"
+msgstr ""
+
+msgctxt "field:project.work.summary.start,limit_date:"
+msgid "At Date"
+msgstr ""
+
+msgctxt "model:ir.action,name:act_project_summary_id"
+msgid "Project Summary"
+msgstr ""
+
+msgctxt "model:ir.action,name:wizard_open_project_summary"
+msgid "Open Project Summary"
+msgstr ""
+
+msgctxt "model:project.work.summary,name:"
+msgid "Project Summary"
+msgstr ""
+
+msgctxt "model:project.work.summary.start,name:"
+msgid "Project Summary Start"
+msgstr ""
+
+msgctxt "view:project.work.summary.start:"
+msgid "Open Project Summary"
+msgstr ""
+
+msgctxt "view:project.work.summary:"
+msgid "Project Summary"
+msgstr ""
+
+msgctxt "wizard_button:project.open_summary,start,end:"
+msgid "Cancel"
+msgstr ""
+
+msgctxt "wizard_button:project.open_summary,start,open_summary:"
+msgid "Open"
+msgstr ""

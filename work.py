@@ -59,7 +59,7 @@ class Work:
     __metaclass__ = PoolMeta
     __name__ = 'project.work'
 
-    progress_cost = fields.Function(fields.Numeric('Cost(P)',
+    progress_cost = fields.Function(fields.Numeric('Progress Cost',
             digits=(16, 4)), 'get_total')
     progress_revenue = fields.Function(fields.Numeric('Revenue(P)',
             digits=(16, 4)), 'get_total')
