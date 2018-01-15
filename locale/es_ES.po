@@ -4,124 +4,124 @@ msgstr "Content-Type: text/plain; charset=utf-8\n"
 
 msgctxt "field:project.work,invoiced_cost:"
 msgid "Cost (F)"
-msgstr ""
+msgstr "Cost (F)"
 
 msgctxt "field:project.work,progress_cost:"
-msgid "Progress Cost"
+msgid "Cost(P)"
 msgstr "Coste del progreso"
 
 msgctxt "field:project.work,progress_revenue:"
 msgid "Revenue(P)"
-msgstr ""
+msgstr "Ingresos en progreso"
 
 msgctxt "field:project.work.summary,children:"
 msgid "Children"
-msgstr ""
+msgstr "Hijos"
 
 msgctxt "field:project.work.summary,company:"
 msgid "Company"
-msgstr ""
+msgstr "Empresa"
 
 msgctxt "field:project.work.summary,cost:"
 msgid "Cost(T)"
-msgstr ""
+msgstr "Coste teórico"
 
 msgctxt "field:project.work.summary,create_date:"
 msgid "Create Date"
-msgstr ""
+msgstr "Fecha de creación"
 
 msgctxt "field:project.work.summary,create_uid:"
 msgid "Create User"
-msgstr ""
+msgstr "Usuario de creación"
 
 msgctxt "field:project.work.summary,id:"
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 msgctxt "field:project.work.summary,invoiced_amount:"
 msgid "Revenue(F)"
-msgstr ""
+msgstr "Ingresos facturados"
 
 msgctxt "field:project.work.summary,invoiced_cost:"
 msgid "Cost(F)"
-msgstr ""
+msgstr "Cost (F)"
 
 msgctxt "field:project.work.summary,name:"
 msgid "Name"
-msgstr ""
+msgstr "Nombre"
 
 msgctxt "field:project.work.summary,origin:"
 msgid "Origin"
-msgstr ""
+msgstr "Origen"
 
 msgctxt "field:project.work.summary,parent:"
 msgid "Parent"
-msgstr ""
+msgstr "Padre"
 
 msgctxt "field:project.work.summary,progress_cost:"
 msgid "Cost(P)"
-msgstr ""
+msgstr "Cost en progrés"
 
 msgctxt "field:project.work.summary,progress_revenue:"
 msgid "Revenue(P)"
-msgstr ""
+msgstr "Crear usuario"
 
 msgctxt "field:project.work.summary,rec_name:"
 msgid "Name"
-msgstr ""
+msgstr "Nombre"
 
 msgctxt "field:project.work.summary,revenue:"
 msgid "Revenue(T)"
-msgstr ""
+msgstr "Ingresos teóricos"
 
 msgctxt "field:project.work.summary,type:"
 msgid "Type"
-msgstr ""
+msgstr "Tipo"
 
 msgctxt "field:project.work.summary,write_date:"
 msgid "Write Date"
-msgstr ""
+msgstr "Fecha de escritura"
 
 msgctxt "field:project.work.summary,write_uid:"
 msgid "Write User"
-msgstr ""
+msgstr "Usuario de escritura"
 
 msgctxt "field:project.work.summary.start,id:"
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 msgctxt "field:project.work.summary.start,limit_date:"
 msgid "At Date"
-msgstr ""
+msgstr "A fecha"
 
 msgctxt "model:ir.action,name:act_project_summary_id"
 msgid "Project Summary"
-msgstr ""
+msgstr "Resumen de proyecto"
 
 msgctxt "model:ir.action,name:wizard_open_project_summary"
 msgid "Open Project Summary"
-msgstr ""
+msgstr "Abrir resumen de proyecto"
 
 msgctxt "model:project.work.summary,name:"
 msgid "Project Summary"
-msgstr ""
+msgstr "Resumen del proyecto"
 
 msgctxt "model:project.work.summary.start,name:"
 msgid "Project Summary Start"
-msgstr ""
+msgstr "Iniciar resumen de proyecto"
 
 msgctxt "view:project.work.summary.start:"
 msgid "Open Project Summary"
-msgstr ""
+msgstr "Resumen de proyecto en progreso"
 
 msgctxt "view:project.work.summary:"
 msgid "Project Summary"
-msgstr ""
+msgstr "Resumen de proyecto"
 
 msgctxt "wizard_button:project.open_summary,start,end:"
 msgid "Cancel"
-msgstr ""
+msgstr "Cancelar"
 
 msgctxt "wizard_button:project.open_summary,start,open_summary:"
 msgid "Open"
-msgstr ""
+msgstr "Abrir"
