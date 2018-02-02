@@ -2,12 +2,12 @@
 <!-- The COPYRIGHT file at the top level of this repository contains the full
      copyright notices and license terms. -->
 <data>
- <xpath expr="/form/notebook/page/field[@name='revenue']" position="after">
+  <xpath expr="/form/notebook/page/field[@name='revenue']" position="after">
          <label name="progress_cost"/>
         <field name="progress_cost"/>
         <label name="progress_revenue"/>
         <field name="progress_revenue"/>
         <label name="invoiced_cost"/>
         <field name="invoiced_cost"/>
-    </xpath>
-  </data>
+  </xpath>
+</data>
